@@ -30,9 +30,9 @@ public class InventoryUi {
 	public void runUi() {
 		try {
 			List<Item> list = new ArrayList<>();
-			Supplier supplier1 = new Supplier("gopi");
+			Supplier supplier1 = new Supplier("sai");
 			supplierService.addSupplier(supplier1);
-			Supplier supplier2 = new Supplier("sai");
+			Supplier supplier2 = new Supplier("gopi");
 			supplierService.addSupplier(supplier2);
 			Supplier supplier3 = new Supplier("subash");
 			supplierService.addSupplier(supplier3);
@@ -43,7 +43,7 @@ public class InventoryUi {
 			Item item2 = new Item("Computer", supplier2);
 			list.add(item2);
 			itemService.addItem(item2);
-			Item item3 = new Item("phone", supplier3);
+			Item item3 = new Item("laptop", supplier3);
 			list.add(item3);
 			itemService.addItem(item3);
 			
@@ -57,7 +57,7 @@ public class InventoryUi {
 			Computer item6 = new Computer("Hp",supplier1,1024);
 			list.add(item6);
 			itemService.addItem(item6);
-			Computer item7 = new Computer("Dell",supplier2, 2048);
+			Computer item7 = new Computer("Dell",supplier2, 1024);
 			list.add(item7);
 			itemService.addItem(item7);
 			
