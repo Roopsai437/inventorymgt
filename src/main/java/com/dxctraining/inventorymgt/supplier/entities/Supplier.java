@@ -1,71 +1,54 @@
 package com.dxctraining.inventorymgt.supplier.entities;
 
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import com.dxctraining.inventorymgt.item.entities.Item;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="supplier")
 public class Supplier {
-	
-	@Id
-	@GeneratedValue
-	private int id;
+	 @Id
+	 @GeneratedValue
+     private int id;
 	private String name;
-	
-	@OneToMany(mappedBy = "supplier")
-	private Set<Item> item;
-	
-	public Set<Item> getItems(){
-		return item;
-	}
-	
-	public void setItems(Set<Item> item) {
-		this.item = item;
-	}
-	
 	public Supplier(String name) {
-		this.name = name;
+
+		this.name=name;
 	}
 	public Supplier() {
-		this("");
 	}
-
+	
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 	@Override
-	public int hashCode() {
-		return id;
-	}
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) {
+	public boolean equals(Object arg) {
+		if(this==arg) {
 			return true;
 		}
-		if(o == null || !(o instanceof Supplier)) {
+
+	   if(arg==null || !(arg instanceof Supplier) ) {
 			return false;
-		}
-		Supplier that = (Supplier)o;
-		boolean isequals = this.id == that.id;
-		return isequals;
-		
+	   }
+
+	    Supplier that=(Supplier)arg;	
+		boolean isequal=this.id==that.id;
+		return isequal;
 	}
+
+    @Override
+    public int hashCode(){
+		return id;
+		}
 
 }

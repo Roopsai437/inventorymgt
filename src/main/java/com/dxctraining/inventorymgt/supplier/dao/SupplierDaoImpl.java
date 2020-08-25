@@ -9,49 +9,36 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import com.dxctraining.inventorymgt.supplier.entities.Supplier;
-import com.dxctraining.inventorymgt.supplier.exceptions.SupplierNullException;
+import com.dxctraining.inventorymgt.supplier.exceptions.SupplierNotFoundException;
 
 @Repository
 public class SupplierDaoImpl implements ISupplierDao {
-	
-	@PersistenceContext
-	private EntityManager em;
-	
-	@Override
-	public Supplier findById(int id) {
-		Supplier supplier = em.find(Supplier.class, id);
-		if(supplier == null) {
-			throw new SupplierNullException("Supplier is null");
+	 @PersistenceContext
+	    private EntityManager entityManager;
+	 @Override
+	    public Supplier findSupplierById(int id) {
+	        Supplier supplier=entityManager.find(Supplier.class,id);
+	        if(supplier==null){
+	            throw new SupplierNotFoundException("supplier is null");
+	        }
+	        return supplier;
+	    }
+	  @Override
+	    public void remove(int id) {
+	     Supplier supplier= findSupplierById(id) ;
+	     entityManager.remove(supplier);
+	    }
+	  @Override
+	    public void add(Supplier supplier) {
+	        entityManager.persist(supplier);
+	       
+	    }
+	  public List<Supplier> displayAllSuppliers() {
+		  String jpaql="from Supplier";
+		  TypedQuery<Supplier>query=entityManager.createQuery(jpaql,Supplier.class);
+			List<Supplier> supplierList = query.getResultList();
+			return supplierList ;
 		}
-		return supplier;
-	}
-
-	@Override
-	public Supplier addSupplier(Supplier supplier) {
-		em.persist(supplier);
-		return supplier;
-	}
-
-	@Override
-	public Supplier updateSupplier(Supplier supplier) {
-		em.merge(supplier);
-		return supplier;
-	}
-
-	@Override
-	public void removeSupplier(int id) {
-		Supplier supplier = findById(id);
-		em.remove(supplier);
-		
-	}
-
-	@Override
-	public List<Supplier> listAll() {
-		String jpaql = "from Supplier";
-		TypedQuery<Supplier>query=em.createQuery(jpaql, Supplier.class);
-		List<Supplier>listAll=query.getResultList();
-		return listAll;
-	}
-
+	
 
 }

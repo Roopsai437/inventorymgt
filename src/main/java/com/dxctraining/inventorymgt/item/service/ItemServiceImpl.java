@@ -1,5 +1,6 @@
 package com.dxctraining.inventorymgt.item.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,68 +8,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dxctraining.inventorymgt.item.dao.IItemDao;
-import com.dxctraining.inventorymgt.item.entities.Computer;
 import com.dxctraining.inventorymgt.item.entities.Item;
-import com.dxctraining.inventorymgt.item.entities.Phone;
-import com.dxctraining.inventorymgt.item.exceptions.InvalidItemArgumentException;
+import com.dxctraining.inventorymgt.item.exceptions.InvalidArgumentException;
+import com.dxctraining.inventorymgt.item.exceptions.ItemNotFoundException;
 
 @Transactional
 @Service
 public class ItemServiceImpl implements IItemService {
+
+    @Autowired
+    private IItemDao dao;
+   
+    @Override
+    public Item findItemById(int id) {
+       Item item= dao.findItemById(id);
+        return item;
+    }
+
+  @Override
+    public void remove(int id) {
+     dao.remove(id);
+    }
+  @Override
+    public void add(Item item) {
+	  validate(item);
+	  dao.add(item);
+       
+       
+    }
+  public List<Item> displayAllItems() {
+		List<Item>items=dao.displayAllItems();
+		return items;
+	}
+  public void validate(Object arg){
+      if(arg==null){
+          throw new InvalidArgumentException("argument is null");
+      }
+  }
 	
-	@Autowired
-	private IItemDao dao;
-	
-	@Override
-	public Item findById(int id) {
-		validateId(id);
-		Item item = dao.findById(id);
-		return item;
-	}
 
-	private void validateId(int id) {
-		if(id == 0) {
-			throw new InvalidItemArgumentException("id should not be null");
-		}
-		
-	}
-
-
-	@Override
-	public Item addItem(Item item) {
-		validateItem(item);
-		item = dao.addItem(item);
-		return item;
-	}
-
-	private void validateItem(Item item) {
-		if(item == null) {
-			throw new InvalidItemArgumentException("item is invalid");
-		}
-		
-	}
-
-	@Override
-	public Item updateItem(Item item) {
-		validateItem(item);
-		item = dao.updateItem(item);
-		return item;
-	}
-
-	@Override
-	public void removeItem(int id) {
-		dao.removeItem(id);
-		
-	}
-	@Override
-	public List<Computer> computerlist() {
-		List<Computer>list = dao.computerlist();
-		return list;
-	}
-
-	@Override
-	public List<Phone> phonelist() {
-		List<Phone>list = dao.phonelist();
-		return list;
-	}
 }

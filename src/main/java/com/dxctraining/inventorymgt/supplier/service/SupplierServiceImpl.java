@@ -1,70 +1,44 @@
 package com.dxctraining.inventorymgt.supplier.service;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dxctraining.inventorymgt.supplier.dao.ISupplierDao;
 import com.dxctraining.inventorymgt.supplier.entities.Supplier;
-import com.dxctraining.inventorymgt.supplier.exceptions.InvalidSupplierArgumentException;
-import com.dxctraining.inventorymgt.supplier.exceptions.SupplierNullException;
+import com.dxctraining.inventorymgt.supplier.exceptions.InvalidArgumentException;
 
 @Transactional
 @Service
 public class SupplierServiceImpl implements ISupplierService {
-	
-	@Autowired
-	private ISupplierDao dao;
-	
-	@Override
-	public Supplier findById(int id) {
-		validateId(id);
-		Supplier supplier = dao.findById(id);
-		return supplier;
-	}
-	
-	private void validateId(int id) {
-		if(id == 0) {
-			throw new InvalidSupplierArgumentException("id should not be null");
-		}
-		
-	}
 
-	@Override
-	public Supplier addSupplier(Supplier supplier) {
-		validateSupplier(supplier);
-		dao.addSupplier(supplier);
-		return supplier;
-	}
+    @Autowired
+    private ISupplierDao dao;
+    @Override
+    public Supplier findSupplierById(int id) {
+       Supplier supplier= dao.findSupplierById(id);
+        return supplier;
+    }
 
-	private void validateSupplier(Supplier supplier) {
-		if(supplier == null) {
-			throw new SupplierNullException("supplier is null");
-		}
-		
+  @Override
+    public void remove(int id) {
+     dao.remove(id);
+    }
+  @Override
+    public Supplier add(Supplier supplier) {
+	  validate(supplier);
+	  dao.add(supplier);
+	return supplier;   
+    }
+  public List<Supplier> displayAllSuppliers() {
+		List<Supplier>suppliers=dao.displayAllSuppliers();
+		return suppliers;
 	}
+  public void validate(Object arg){
+      if(arg==null){
+          throw new InvalidArgumentException("argument is null");
+      }
+  }
+   
 
-	@Override
-	public Supplier updateSupplier(Supplier supplier) {
-		validateSupplier(supplier);
-		dao.updateSupplier(supplier);
-		return supplier;
-	}
-
-
-	@Override
-	public void removeSupplier(int id) {
-		validateId(id);
-		dao.removeSupplier(id);
-		
-	}
-
-	@Override
-	public List<Supplier> listAll() {
-		List<Supplier>listAll= dao.listAll();
-		return listAll;
-	}
-	
 }

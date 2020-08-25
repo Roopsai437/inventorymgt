@@ -1,4 +1,4 @@
-package com.dxctraining.inventorymgt.item.dto;
+package com.dxctraining.inventorymgt.dto;
 
 import com.dxctraining.inventorymgt.item.entities.Item;
 

@@ -1,66 +1,45 @@
 package com.dxctraining.inventorymgt.item.dao;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.dxctraining.inventorymgt.item.entities.Computer;
 import com.dxctraining.inventorymgt.item.entities.Item;
-import com.dxctraining.inventorymgt.item.entities.Phone;
-import com.dxctraining.inventorymgt.item.exceptions.ItemNullException;
+import com.dxctraining.inventorymgt.item.exceptions.ItemNotFoundException;
 
 @Repository
-public class ItemDaoImpl implements IItemDao{
+public class ItemDaoImpl implements IItemDao {
 	
-	@Autowired
-	private EntityManager em;
-	
-	@Override
-	public Item findById(int id) {
-		Item item = em.find(Item.class, id);
-		if(item == null) {
-			throw new ItemNullException("item is null");
+	 @PersistenceContext
+	    private EntityManager entityManager;
+	  @Override
+	    public Item findItemById(int id) {
+	        Item item=entityManager.find(Item.class,id);
+	        if(item==null){
+	            throw new ItemNotFoundException("item not null");
+	        }
+	        return item;
+	    }
+	  @Override
+	    public void remove(int id) {
+	     Item item= findItemById(id) ;
+	     entityManager.remove(item);
+	    }
+	  @Override
+	    public void add(Item item) {
+	        entityManager.persist(item);
+	       
+	    }
+	  public List<Item> displayAllItems() {
+		  String jpaql="from Item";
+		  TypedQuery<Item>query=entityManager.createQuery(jpaql,Item.class);
+			List<Item> itemList = query.getResultList();
+			return itemList;
 		}
-		return item;
-	}
-
-	@Override
-	public Item addItem(Item item) {
-		em.persist(item);
-		return item;
-	}
-
-	@Override
-	public Item updateItem(Item item) {
-		em.merge(item);
-		return item;
-	}
-
-	@Override
-	public void removeItem(int id) {
-		Item item = findById(id);
-		em.remove(item);
-		
-	}
-	@Override
-	public List<Computer> computerlist() {
-		String jpaql = "from Computer";
-		TypedQuery<Computer>query=em.createQuery(jpaql, Computer.class);
-		List<Computer> list = query.getResultList();
-		return list;
-	}
-
-	@Override
-	public List<Phone> phonelist() {
-		String jpaql = "from Phone";
-		TypedQuery<Phone>query=em.createQuery(jpaql, Phone.class);
-		List<Phone>list = query.getResultList();
-		return list;
-	}
-	
-
 }
